@@ -1,5 +1,25 @@
 //  Array de cartas
-let cartas = [
+
+
+// Para añadir las cartas
+let jugador_visor = document.getElementById("jugador_visor");
+let maquina_visor = document.getElementById("maquina_visor");
+
+// Textos de salida
+let jugador_titulo = document.getElementById("jugador_titulo");
+let maquina_titulo = document.getElementById("maquina_titulo");
+
+// Botones
+let pedir = document.getElementById("pedir"); // Botón de pedir carta
+let plantarse = document.getElementById("plantarse"); // Botón de plantarse
+let nueva_partida = document.getElementById("nueva_partida"); // Botón de nueva partida
+
+// Variables globales para guardar la jugada del jugador y de la máquina
+let jugada = 0; // Jugada de la máquina
+let jugadaJugador = 0;    // Jugada del jugador
+
+/**
+ * function to create a card by cholet cartas = [
   "01oros.jpg",
   "02oros.jpg",
   "03oros.jpg",
@@ -40,32 +60,12 @@ let cartas = [
   "10copas.jpg",
   "11copas.jpg",
   "12copas.jpg",
-];
-
-// Para añadir las cartas
-let jugador_visor = document.getElementById("jugador_visor");
-let maquina_visor = document.getElementById("maquina_visor");
-
-// Textos de salida
-let jugador_titulo = document.getElementById("jugador_titulo");
-let maquina_titulo = document.getElementById("maquina_titulo");
-
-// Botones
-let pedir = document.getElementById("pedir");
-let plantarse = document.getElementById("plantarse");
-let nueva_partida = document.getElementById("nueva_partida");
-
-// Variables globales para guardar la jugada del jugador y de la máquina
-let jugada = 0;
-let jugadaJugador = 0;
-
-/**
- * function to create a card by choosing a random source to set
+];osing a random source to set
  */
 const createCard = () => {
-  const card = document.createElement('IMG')
-  card.src = './imagenes/'+cartas[Math.floor(Math.random() * cartas.length -1)]
-  card.classList.add('card')
+  const card = document.createElement('IMG') //create img element
+  card.src = './imagenes/'+cartas[Math.floor(Math.random() * (cartas.length -1))] //importante parentesis
+  card.classList.add('card') //le voy a dar una clase a la imagen para que se vea mas bonita
   return card
 }
 /**
@@ -74,8 +74,8 @@ const createCard = () => {
  * @param {HTMLImageElement} card 
  * @return number value from real card
  */
-const getScore = (card) => {
-  return card.src.substring(card.src.lastIndexOf('/') + 1,card.src.lastIndexOf('/') + 3)
+const getScore = (card) => { //funcion para obtener el valor de la carta
+  return card.src.substring(card.src.lastIndexOf('/') + 1,card.src.lastIndexOf('/') + 3) //obtengo el valor de la carta a partir de la url de la imagen de la carta , en +1 
 }
 /**
  * function to set score for palyer each time him choose to flip a card
@@ -83,10 +83,10 @@ const getScore = (card) => {
  * @param {string} score 
  */
 const setScore = (score,player) => {
-  if(score < 10 ){
-    score = score[1]
+  if(score < 10 ){ //si el valor de la carta es menor que 10
+    score = score[1] //obtengo el segundo caracter del string
   }else{
-    score = '0.5'
+    score = '0.5' //si no es menor que 10 es un 10 o un 11 o un 12, por lo que es un 0.5
   }
   if(player == 'user'){
     if(jugador_titulo.textContent != ''){
@@ -94,14 +94,14 @@ const setScore = (score,player) => {
     }else{
       jugador_titulo.textContent = score
     }
-    if(parseFloat(jugador_titulo.textContent) > 7.5){
+    if(parseFloat(jugador_titulo.textContent) > 7.5){ //si el jugador se pasa de 7.5
       //disabled button to keep playing
       pedir.disabled = true
       machineStartsGame()
      }
   }else{
     if(maquina_titulo.textContent != ''){
-      maquina_titulo.textContent  = parseFloat(score) + parseFloat(parseFloat(maquina_titulo.textContent))
+      maquina_titulo.textContent  = parseFloat(score) + parseFloat(parseFloat(maquina_titulo.textContent)) //sumo el valor de la carta a la jugada de la maquina
     }else{
       maquina_titulo.textContent = score
     }
@@ -113,7 +113,7 @@ const setScore = (score,player) => {
  * 
  * @param {HTMLImageElement} card 
  */
-const putCard = (card,player) => {
+const putCard = (card,player) => { //funcion para mostrar la carta en pantalla
   if(player == 'user'){
     jugador_visor.appendChild(card)
   }else{
@@ -134,13 +134,13 @@ const pedirCarta = (player) => {
 const winner = (player) => {
   if(player == 'machine'){
     let score = maquina_titulo.textContent
-    maquina_titulo.textContent = 'LA MAQUINA HA GANADO LA PARTIDA CON '+score+' PUNTOS'
+    maquina_titulo.textContent = 'LA MAQUINA HA GANADO LA PARTIDA CON ' + score + ' PUNTOS'
   }else{
     let score = jugador_titulo.textContent
-    jugador_titulo.textContent = 'HAS GANADO LA PARTIDA CON '+score+' PUNTOS'
+    jugador_titulo.textContent = 'HAS GANADO LA PARTIDA CON ' + score + ' PUNTOS'
   }
 }
-const endGame = () => {
+const endGame = () => {  //quito los botones de pedir y plantarse y muestro el de nueva partida
   plantarse.classList.add('ocultar')
   pedir.classList.add('ocultar')
   nueva_partida.classList.add('mostrar')
@@ -148,9 +148,9 @@ const endGame = () => {
 /**
  * function to evaluate which is the winner
  */
-const evaluateGame = () => {
+const evaluateGame = () => { //evaluo quien ha ganado
   if((parseFloat(jugador_titulo.textContent) <= 7.5 
-  && parseFloat(maquina_titulo.textContent) < parseFloat(jugador_titulo.textContent))
+  && parseFloat(maquina_titulo.textContent) < parseFloat(jugador_titulo.textContent)) //si el jugador no se ha pasado de 7.5 y la maquina tiene menos puntos que el jugador
   || parseFloat(maquina_titulo.textContent) > 7.5){
     winner('player')
   }else{
